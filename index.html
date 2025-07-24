@@ -355,7 +355,7 @@
             <div class="upload-icon">📄</div>
             <div class="upload-text">Drop your PDF file here</div>
             <div class="upload-subtext">or click to browse</div>
-            <button class="choose-file-btn" onclick="document.getElementById('fileInput').click()">
+            <button class="choose-file-btn">
                 Choose PDF File
             </button>
         </div>
@@ -430,14 +430,26 @@
             }
         });
 
-        // Click to upload
-        uploadArea.addEventListener('click', () => {
+        // Click to upload - improved event handling
+        uploadArea.addEventListener('click', (e) => {
+            // Only trigger file input if not clicking the button directly
+            if (!e.target.classList.contains('choose-file-btn')) {
+                fileInput.click();
+            }
+        });
+
+        // Separate button click handler to prevent double-triggering
+        document.querySelector('.choose-file-btn').addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent the uploadArea click event
             fileInput.click();
         });
 
+        // Improved file input change handler
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFileSelect(e.target.files[0]);
+                // Clear the input value to allow selecting the same file again if needed
+                e.target.value = '';
             }
         });
 
